@@ -160,6 +160,9 @@ const formatFlags: Record<
   YY: (dateObj: Date): string =>
     pad(String(dateObj.getFullYear()), 4).substr(2),
   YYYY: (dateObj: Date): string => pad(dateObj.getFullYear(), 4),
+  BB: (dateObj: Date): string =>
+    pad(String(dateObj.getFullYear()+543), 4).substr(2),
+  BBBB: (dateObj: Date): string => pad(dateObj.getFullYear()+543, 4),
   h: (dateObj: Date): string => String(dateObj.getHours() % 12 || 12),
   hh: (dateObj: Date): string => pad(dateObj.getHours() % 12 || 12),
   H: (dateObj: Date): string => String(dateObj.getHours()),
@@ -248,6 +251,15 @@ const parseFlags: Record<string, ParseInfo> = {
       return +("" + (+v > 68 ? cent - 1 : cent) + v);
     }
   ],
+  BB: [
+    "year",
+    twoDigits,
+    (v: string): number => {
+      const now = new Date();
+      const cent = +("" + now.getFullYear()+543).substr(0, 2);
+      return +("" + (+v > 68 ? cent - 1 : cent) + v);
+    }
+  ],
   h: ["hour", twoDigitsOptional, undefined, "isPm"],
   hh: ["hour", twoDigits, undefined, "isPm"],
   H: ["hour", twoDigitsOptional],
@@ -257,6 +269,7 @@ const parseFlags: Record<string, ParseInfo> = {
   s: ["second", twoDigitsOptional],
   ss: ["second", twoDigits],
   YYYY: ["year", fourDigits],
+  BBBB: ["year", fourDigits],
   S: ["millisecond", "\\d", (v: string): number => +v * 100],
   SS: ["millisecond", twoDigits, (v: string): number => +v * 10],
   SSS: ["millisecond", threeDigits],
